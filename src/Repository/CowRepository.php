@@ -39,28 +39,19 @@ class CowRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Cow[] Returns an array of Cow objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findQuantidadeTotalLeite()
+    {
+        return $this->createQueryBuilder('g')
+            ->select('SUM(g.qt_leite) as totalLeite')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-//    public function findOneBySomeField($value): ?Cow
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findQuantidadeTotalRacao()
+    {
+        return $this->createQueryBuilder('g')
+            ->select('SUM(g.qt_racao) as totalRacao')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
