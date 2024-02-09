@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Farm;
 use App\Form\FarmType;
 use App\Repository\FarmRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +19,19 @@ class FarmController extends AbstractController
     /**
      * @Route("/", name="app_farm_index", methods={"GET"})
      */
-    public function index(FarmRepository $farmRepository): Response
+    public function index(FarmRepository $farmRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $farmQuery = $farmRepository->createQueryBuilder('f')
+        ->getQuery();
+
+        $farm = $paginator->paginate(
+            $farmQuery,
+            $request->query->getInt('page', 1),
+            10
+        );
+
         return $this->render('farm/index.html.twig', [
-            'farms' => $farmRepository->findAll(),
+            'farms' => $farm
         ]);
     }
 

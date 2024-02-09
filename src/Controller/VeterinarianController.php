@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Veterinarian;
 use App\Form\VeterinarianType;
 use App\Repository\VeterinarianRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +19,19 @@ class VeterinarianController extends AbstractController
     /**
      * @Route("/", name="app_veterinarian_index", methods={"GET"})
      */
-    public function index(VeterinarianRepository $veterinarianRepository): Response
+    public function index(VeterinarianRepository $vetRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $vetQuery = $vetRepository->createQueryBuilder('c')
+            ->getQuery();
+
+        $veterinarians = $paginator->paginate(
+            $vetQuery,
+            $request->query->getInt('page', 1),
+            10 // Número de itens por página
+        );
+
         return $this->render('veterinarian/index.html.twig', [
-            'veterinarians' => $veterinarianRepository->findAll(),
+            'veterinarians' => $veterinarians,
         ]);
     }
 

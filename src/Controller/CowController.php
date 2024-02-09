@@ -6,7 +6,7 @@ use App\Entity\Cow;
 use App\Entity\Farm;
 use App\Form\CowType;
 use App\Repository\CowRepository;
-use SebastianBergmann\Environment\Console;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,10 +20,19 @@ class CowController extends AbstractController
     /**
      * @Route("/", name="app_cow_index", methods={"GET"})
      */
-    public function index(CowRepository $cowRepository): Response
+    public function index(CowRepository $cowRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $cowsQuery = $cowRepository->createQueryBuilder('c')
+            ->getQuery();
+
+        $cows = $paginator->paginate(
+            $cowsQuery,
+            $request->query->getInt('page', 1),
+            10 // Número de itens por página
+        );
+
         return $this->render('cow/index.html.twig', [
-            'cows' => $cowRepository->findAll(),
+            'cows' => $cows,
         ]);
     }
 
@@ -41,7 +50,7 @@ class CowController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $cowRepository->add($cow, true);
-
+            $this->addFlash('success', 'Animal Adicionado com sucesso.');
             return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
         }
 

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Cow;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @extends ServiceEntityRepository<Cow>
@@ -72,7 +73,7 @@ class CowRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findGadosParaAbate()
+    public function findGadosParaAbate() : QueryBuilder
     {
         return $this->createQueryBuilder('g')
             ->andWhere('g.status = :status')
@@ -82,8 +83,6 @@ class CowRepository extends ServiceEntityRepository
             ->setParameter('litrosLeiteLimite', 40)
             ->setParameter('litrosLeiteLimiteAlt', 70)
             ->setParameter('quantidadeRacaoLimite', 50)
-            ->setParameter('pesoLimite', 18)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('pesoLimite', 18);
     }
 }

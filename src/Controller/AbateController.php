@@ -5,23 +5,29 @@
 namespace App\Controller;
 
 use App\Entity\Cow;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 class AbateController extends AbstractController
 {
     /**
      * @Route("/relatorio-abate", name="app_relatorio_abate")
      */
-    public function index(): Response
+    public function index(PaginatorInterface $paginator, Request $request): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $relatorioAbate = $entityManager->getRepository(Cow::class)->findGadosParaAbate();
+        $queryBuilder = $entityManager->getRepository(Cow::class)->findGadosParaAbate();
 
-        return $this->render('abate/index.html.twig', [
-            'relatorioAbate' => $relatorioAbate,
-        ]);
+        $relatorioAbate = $paginator->paginate(
+            $queryBuilder->getQuery(),
+            $request->query->getInt('page', 1),
+            10 
+        );
+
+        return $this->render('abate/index.html.twig', ['relatorioAbate' => $relatorioAbate]);
     }
 
     /**
@@ -41,5 +47,3 @@ class AbateController extends AbstractController
         return $this->redirectToRoute('app_relatorio_abate');
     }
 }
-
-

@@ -34,6 +34,10 @@
         {% endfor %}
         </tbody>
     </table>
+     {# Renderizar a paginação usando o KnpPaginatorBundle #}
+    <div class="pagination">
+        {{ knp_pagination_render(farms) }}
+    </div>
 
     <a href="{{ path('app_farm_new') }}">Create new</a>
 {% endblock %}

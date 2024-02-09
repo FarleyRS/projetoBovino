@@ -32,6 +32,10 @@
         {% endfor %}
         </tbody>
     </table>
+     {# Renderizar a paginação usando o KnpPaginatorBundle #}
+    <div class="pagination">
+        {{ knp_pagination_render(veterinarians) }}
+    </div>
 
     <a href="{{ path('app_veterinarian_new') }}">Create new</a>
 {% endblock %}

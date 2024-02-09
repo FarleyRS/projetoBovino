@@ -34,6 +34,11 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        {# Renderizar a paginação usando o KnpPaginatorBundle #}
+        <div class="pagination">
+            {{ knp_pagination_render(relatorioAbate) }}
+        </div>
     {% else %}
         <p>Não há animais elegíveis para abate no momento.</p>
     {% endif %}
