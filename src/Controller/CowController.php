@@ -50,7 +50,7 @@ class CowController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $cowRepository->add($cow, true);
-
+            $this->addFlash('success', 'Animal Adicionado com sucesso.');
             return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
         }
 
