@@ -15,6 +15,7 @@
                 <th>Peso</th>
                 <th>Nascimento</th>
                 <th>Status</th>
+                <th>Fazenda</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -26,20 +27,28 @@
                 <td>{{ cow.qtLeite }}</td>
                 <td>{{ cow.qtRacao }}</td>
                 <td>{{ cow.peso }}</td>
-                <td>{{ cow.status ? 'Vivo' : 'Abatido' }}</td>
                 <td>{{ cow.nascimento ? cow.nascimento|date('Y-m-d') : '' }}</td>
+                <td>{{ cow.status ? 'Vivo' : 'Abatido' }}</td>
+                <td>{{ cow.fazenda}}</td>
                 <td>
                     <a href="{{ path('app_cow_show', {'id': cow.id}) }}">show</a>
                     <a href="{{ path('app_cow_edit', {'id': cow.id}) }}">edit</a>
                 </td>
             </tr>
+       
         {% else %}
             <tr>
                 <td colspan="7">no records found</td>
             </tr>
         {% endfor %}
+        
+        
         </tbody>
+        
     </table>
-
+    {# Renderizar a paginação usando o KnpPaginatorBundle #}
+    <div class="pagination">
+        {{ knp_pagination_render(cows) }}
+    </div>
     <a href="{{ path('app_cow_new') }}">Create new</a>
 {% endblock %}

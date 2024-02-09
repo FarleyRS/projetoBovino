@@ -19,6 +19,12 @@
                 <th>CRMV</th>
                 <td>{{ veterinarian.CRMV }}</td>
             </tr>
+             <tr>
+                <th>Fazendas</th>
+                {% for farm in veterinarian.farms %}         
+                    <td>{{ farm.nome }}</td>
+                {% endfor %}
+            </tr>
         </tbody>
     </table>
 
