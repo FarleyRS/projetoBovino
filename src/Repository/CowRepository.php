@@ -68,7 +68,7 @@ class CowRepository extends ServiceEntityRepository
             ->andWhere('g.qt_racao > :quantidadeRacaoLimite')
             ->setParameter('status', true)
             ->setParameter('idadeLimite', 1)
-            ->setParameter('quantidadeRacaoLimite', 500)
+            ->setParameter('quantidadeRacaoLimite', 50)
             ->getQuery()
             ->getResult();
     }
