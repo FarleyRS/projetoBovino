@@ -14,6 +14,7 @@
                 <th>Qt_racao</th>
                 <th>Peso</th>
                 <th>Nascimento</th>
+                <th>Status</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -25,6 +26,7 @@
                 <td>{{ cow.qtLeite }}</td>
                 <td>{{ cow.qtRacao }}</td>
                 <td>{{ cow.peso }}</td>
+                <td>{{ cow.status ? 'Vivo' : 'Abatido' }}</td>
                 <td>{{ cow.nascimento ? cow.nascimento|date('Y-m-d') : '' }}</td>
                 <td>
                     <a href="{{ path('app_cow_show', {'id': cow.id}) }}">show</a>

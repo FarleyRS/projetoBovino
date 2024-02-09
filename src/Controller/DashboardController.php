@@ -18,6 +18,7 @@ class DashboardController extends AbstractController
 
         $relatorioLeite = $entityManager->getRepository(Cow::class)->findQuantidadeTotalLeite();
         $relatorioRacao = $entityManager->getRepository(Cow::class)->findQuantidadeTotalRacao();
+        $relatorioJovens = $entityManager->getRepository(Cow::class)->findJovensConsumindoMaisRacao();
 
         $totalLeite = floatval($relatorioLeite);
         $totalRacao = floatval($relatorioRacao);
@@ -25,8 +26,11 @@ class DashboardController extends AbstractController
         return $this->render('dashboard/index.html.twig', [
             'relatorioLeite' => ['totalLeite' => $totalLeite],
             'relatorioRacao' => ['totalRacao' => $totalRacao],
+            'relatorioJovens' => $relatorioJovens,
             'pagina' => 'Dashboard'
         ]);
         
     }
+
+
 }

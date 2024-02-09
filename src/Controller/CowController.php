@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Cow;
+use App\Entity\Farm;
 use App\Form\CowType;
 use App\Repository\CowRepository;
+use SebastianBergmann\Environment\Console;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +32,10 @@ class CowController extends AbstractController
      */
     public function new(Request $request, CowRepository $cowRepository): Response
     {
+
+
         $cow = new Cow();
+        $cow->setStatus(true);
         $form = $this->createForm(CowType::class, $cow);
         $form->handleRequest($request);
 
@@ -66,8 +71,10 @@ class CowController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $cowRepository->add($cow, true);
-
+            $this->addFlash('success', 'Animal editado com sucesso.');
             return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+        }else{
+            $this->addFlash('error', 'Não foi possivel editar');
         }
 
         return $this->renderForm('cow/edit.html.twig', [
@@ -81,8 +88,11 @@ class CowController extends AbstractController
      */
     public function delete(Request $request, Cow $cow, CowRepository $cowRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$cow->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $cow->getId(), $request->request->get('_token'))) {
             $cowRepository->remove($cow, true);
+            $this->addFlash('success', 'Animal deletado com sucesso.');
+        }else{
+            $this->addFlash('error', 'Não foi possivel deletar.');
         }
 
         return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);

@@ -81,8 +81,8 @@ class Veterinarian
     public function addFarm(Farm $farm): self
     {
         if (!$this->farms->contains($farm)) {
-            $this->farms[] = $farm;
             $farm->addVeterinario($this);
+            $this->farms[] = $farm;
         }
 
         return $this;

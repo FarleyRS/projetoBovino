@@ -28,6 +28,14 @@
                 <td>{{ cow.peso }}</td>
             </tr>
             <tr>
+                <th>Status</th>
+                <td>{{ cow.status ? 'Vivo':'Abatido'}}</td>
+            </tr>
+            <tr>
+                <th>Fazenda</th>
+                <td>{{ cow.fazenda }}</td>
+            </tr>
+            <tr>
                 <th>Nascimento</th>
                 <td>{{ cow.nascimento ? cow.nascimento|date('Y-m-d') : '' }}</td>
             </tr>

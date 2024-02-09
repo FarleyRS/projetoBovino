@@ -16,4 +16,13 @@
             <p>Total de Ração: {{ relatorioRacao.totalRacao }} kg</p>
         </div>
     </div>
+
+     <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Relatório de Jovens Consumindo Mais Ração</h5>
+            {% for cow in relatorioJovens %}
+                <p>{{ cow.codigo }} - {{ cow.getQtRacao() }} kg</p>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

@@ -51,6 +51,11 @@ class Cow
      */
     private $fazenda;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -131,5 +136,17 @@ class Cow
     public function __toString()
     {
         return $this->getCodigo();
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }

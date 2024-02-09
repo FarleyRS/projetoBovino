@@ -104,6 +104,7 @@ class Farm
     public function addVeterinario(Veterinarian $veterinario): self
     {
         if (!$this->veterinarios->contains($veterinario)) {
+            $veterinario->addFarm($this);
             $this->veterinarios[] = $veterinario;
         }
 
@@ -128,8 +129,8 @@ class Farm
     public function addCow(Cow $cow): self
     {
         if (!$this->cows->contains($cow)) {
-            $this->cows[] = $cow;
             $cow->setFazenda($this);
+            $this->cows[] = $cow;
         }
 
         return $this;
