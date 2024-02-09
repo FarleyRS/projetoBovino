@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cow index{% endblock %}
+
+{% block body %}
+    <h1>Cow index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Codigo</th>
+                <th>Qt_leite</th>
+                <th>Qt_racao</th>
+                <th>Peso</th>
+                <th>Nascimento</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for cow in cows %}
+            <tr>
+                <td>{{ cow.id }}</td>
+                <td>{{ cow.codigo }}</td>
+                <td>{{ cow.qtLeite }}</td>
+                <td>{{ cow.qtRacao }}</td>
+                <td>{{ cow.peso }}</td>
+                <td>{{ cow.status ? 'Vivo' : 'Abatido' }}</td>
+                <td>{{ cow.nascimento ? cow.nascimento|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_cow_show', {'id': cow.id}) }}">show</a>
+                    <a href="{{ path('app_cow_edit', {'id': cow.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_cow_new') }}">Create new</a>
+{% endblock %}
