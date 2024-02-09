@@ -21,7 +21,7 @@
         <div class="card-body">
             <h5 class="card-title">Relatório de Jovens Consumindo Mais Ração</h5>
             {% for cow in relatorioJovens %}
-                <p>{{ cow.codigo }} - {{ cow.getQtRacao() }} kg</p>
+                <p> Codigo: {{ cow.codigo }} - Fazenda: {{ cow.fazenda }} - Ração consumida: {{ cow.getQtRacao() }} kg</p>
             {% endfor %}
         </div>
     </div>
