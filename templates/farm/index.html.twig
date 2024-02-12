@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Farm index{% endblock %}
+
+{% block body %}
+    <h1>Farm index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>Tamanho</th>
+                <th>Responsavel</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for farm in farms %}
+            <tr>
+                <td>{{ farm.id }}</td>
+                <td>{{ farm.nome }}</td>
+                <td>{{ farm.tamanho }} ha</td>
+                <td>{{ farm.responsavel }}</td>
+                <td>
+                    <a href="{{ path('app_farm_show', {'id': farm.id}) }}">show</a>
+                    <a href="{{ path('app_farm_edit', {'id': farm.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+     {# Renderizar a paginação usando o KnpPaginatorBundle #}
+    <div class="pagination">
+        {{ knp_pagination_render(farms) }}
+    </div>
+
+    <a href="{{ path('app_farm_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Relatório de Quantidade Total de Leite</h5>
+            <p>Total de Leite: {{ relatorioLeite.totalLeite }} litros</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Relatório de Quantidade Total de Ração</h5>
+            <p>Total de Ração: {{ relatorioRacao.totalRacao }} kg</p>
+        </div>
+    </div>
+
+     <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Relatório de Jovens Consumindo Mais Ração</h5>
+            {% for cow in relatorioJovens %}
+                <p> Codigo: {{ cow.codigo }} - Fazenda: {{ cow.fazenda }} - Ração consumida: {{ cow.getQtRacao() }} kg</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
