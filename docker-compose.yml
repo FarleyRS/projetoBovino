@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  mysql_db:
+    image: mysql
+    platform: linux/x86_64
+    container_name: mysql_db
+    tty: true
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DATABASE: projetobovino
+    networks:
+      - farleyrs
+    command: --innodb-use-native-aio=0
+    
+  symfony_app:
+    container_name: symfony_app
+    entrypoint: bash -c "wait-for mysql_db:3306 -t 50 -- php bin/console doctrine:migrations:migrate --no-interaction --quiet && symfony serve:start"
+    tty: true
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    networks:
+      - farleyrs
+    depends_on:
+      - mysql_db
+    links:
+      - mysql_db
+
+networks:
+  farleyrs: 
+    driver: bridge
