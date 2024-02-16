@@ -41,23 +41,25 @@ class CowController extends AbstractController
      */
     public function new(Request $request, CowRepository $cowRepository): Response
     {
+        try {
+            $cow = new Cow();
+            $cow->setStatus(true);
+            $form = $this->createForm(CowType::class, $cow);
+            $form->handleRequest($request);
 
+            if ($form->isSubmitted() && $form->isValid()) {
+                $cowRepository->add($cow, true);
+                $this->addFlash('success', 'Animal Adicionado com sucesso.');
+                return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+            }
 
-        $cow = new Cow();
-        $cow->setStatus(true);
-        $form = $this->createForm(CowType::class, $cow);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $cowRepository->add($cow, true);
-            $this->addFlash('success', 'Animal Adicionado com sucesso.');
-            return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+            return $this->renderForm('cow/new.html.twig', [
+                'cow' => $cow,
+                'form' => $form,
+            ]);
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Erro ao adicionar novo animal.');
         }
-
-        return $this->renderForm('cow/new.html.twig', [
-            'cow' => $cow,
-            'form' => $form,
-        ]);
     }
 
     /**
@@ -75,21 +77,23 @@ class CowController extends AbstractController
      */
     public function edit(Request $request, Cow $cow, CowRepository $cowRepository): Response
     {
-        $form = $this->createForm(CowType::class, $cow);
-        $form->handleRequest($request);
+        try {
+            $form = $this->createForm(CowType::class, $cow);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $cowRepository->add($cow, true);
-            $this->addFlash('success', 'Animal editado com sucesso.');
-            return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
-        }else{
+            if ($form->isSubmitted() && $form->isValid()) {
+                $cowRepository->add($cow, true);
+                $this->addFlash('success', 'Animal editado com sucesso.');
+                return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+            }
+
+            return $this->renderForm('cow/edit.html.twig', [
+                'cow' => $cow,
+                'form' => $form,
+            ]);
+        } catch (\Exception $e) {
             $this->addFlash('error', 'Não foi possivel editar');
         }
-
-        return $this->renderForm('cow/edit.html.twig', [
-            'cow' => $cow,
-            'form' => $form,
-        ]);
     }
 
     /**
@@ -97,13 +101,15 @@ class CowController extends AbstractController
      */
     public function delete(Request $request, Cow $cow, CowRepository $cowRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $cow->getId(), $request->request->get('_token'))) {
-            $cowRepository->remove($cow, true);
-            $this->addFlash('success', 'Animal deletado com sucesso.');
-        }else{
+        try {
+            if ($this->isCsrfTokenValid('delete' . $cow->getId(), $request->request->get('_token'))) {
+                $cowRepository->remove($cow, true);
+                $this->addFlash('success', 'Animal deletado com sucesso.');
+
+                return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+            }
+        } catch (\Exception $e) {
             $this->addFlash('error', 'Não foi possivel deletar.');
         }
-
-        return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
     }
 }
