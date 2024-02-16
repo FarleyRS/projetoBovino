@@ -104,10 +104,20 @@ class FarmController extends AbstractController
                 $farmRepository->remove($farm, true);
                 $this->addFlash('success', 'Fazenda deletada com Sucesso.');
             }
-           
+
             return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+        } catch (\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException $e) {
+            $errorMessage = $e->getMessage();
+
+            if (strpos($errorMessage, 'cow') !== false) {
+                $this->addFlash('error', 'Não é possível excluir a fazenda. Altere a fazenda associada a algum bovino antes de excluir a fazenda.');
+            } else {
+                $this->addFlash('error', 'Não é possível excluir a fazenda devido estar associada a um veterinario ou bovino.');
+            }
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Erro ao excluir fazenda: ');
+            $this->addFlash('error', 'Ocorreu um erro ao excluir a fazenda.');
         }
+
+        return $this->redirectToRoute('app_farm_index');
     }
 }
