@@ -40,25 +40,27 @@ class FarmController extends AbstractController
      */
     public function new(Request $request, FarmRepository $farmRepository): Response
     {
-        try {
-            $farm = new Farm();
-            $form = $this->createForm(FarmType::class, $farm);
-            $form->handleRequest($request);
+        $farm = new Farm();
+        $form = $this->createForm(FarmType::class, $farm);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
                 $farmRepository->add($farm, true);
                 $this->addFlash('success', 'Fazenda adicionada com Sucesso.');
                 return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erro ao criar fazenda');
+                return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
             }
-
-            return $this->renderForm('farm/new.html.twig', [
-                'farm' => $farm,
-                'form' => $form,
-            ]);
-        } catch (\Exception $e) {
-            $this->addFlash('error', 'Erro ao criar fazenda: ');
         }
+
+        return $this->renderForm('farm/new.html.twig', [
+            'farm' => $farm,
+            'form' => $form,
+        ]);
     }
+
 
     /**
      * @Route("/{id}", name="app_farm_show", methods={"GET"})
@@ -75,47 +77,54 @@ class FarmController extends AbstractController
      */
     public function edit(Request $request, Farm $farm, FarmRepository $farmRepository): Response
     {
-        try {
-            $form = $this->createForm(FarmType::class, $farm);
-            $form->handleRequest($request);
+        $form = $this->createForm(FarmType::class, $farm);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
                 $farmRepository->add($farm, true);
                 $this->addFlash('success', 'Fazenda editada com Sucesso.');
                 return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erro ao editar fazenda');
+                return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
             }
-
-            return $this->renderForm('farm/edit.html.twig', [
-                'farm' => $farm,
-                'form' => $form,
-            ]);
-        } catch (\Exception $e) {
-            $this->addFlash('error', 'Erro ao editar fazenda: ');
         }
+
+        return $this->renderForm('farm/edit.html.twig', [
+            'farm' => $farm,
+            'form' => $form,
+        ]);
     }
+
 
     /**
      * @Route("/{id}", name="app_farm_delete", methods={"POST"})
      */
-    public function delete(Request $request, Farm $farm, FarmRepository $farmRepository): Response
+    public function delete($id, Request $request, FarmRepository $farmRepository): Response
     {
+        $farm = $farmRepository->find($id);
+
+        if (!$farm) {
+            $this->addFlash('error', 'Fazenda com ID ' . $id . ' não encontrada.');
+            return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         try {
             if ($this->isCsrfTokenValid('delete' . $farm->getId(), $request->request->get('_token'))) {
                 $farmRepository->remove($farm, true);
                 $this->addFlash('success', 'Fazenda deletada com Sucesso.');
             }
-
-            return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
         } catch (\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException $e) {
             $errorMessage = $e->getMessage();
 
             if (strpos($errorMessage, 'cow') !== false) {
-                $this->addFlash('error', 'Não é possível excluir a fazenda. Altere a fazenda associada a algum bovino antes de excluir a fazenda.');
+                $this->addFlash('error', 'Não é possível excluir a fazenda ' . $farm->getNome() . '. Altere a fazenda associada a algum bovino antes de excluir a fazenda.');
             } else {
-                $this->addFlash('error', 'Não é possível excluir a fazenda devido estar associada a um veterinario ou bovino.');
+                $this->addFlash('error', 'Não é possível excluir a fazenda com ID ' . $id . ' devido estar associada a um veterinario ou bovino.');
             }
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Ocorreu um erro ao excluir a fazenda.');
+            $this->addFlash('error', 'Ocorreu um erro ao excluir a fazenda com ID ' . $id . ': ' . $e->getMessage());
         }
 
         return $this->redirectToRoute('app_farm_index');

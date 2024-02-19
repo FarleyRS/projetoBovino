@@ -1,45 +1,67 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Lista de Animais para Abate{% endblock %}
+{% block stylesheets %}
+        <link href="{{ asset('css/estilo.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
-    <h1>Lista de Animais para Abate</h1>
-
-    {% if relatorioAbate is not empty %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Leite (litros)</th>
-                    <th>Ração (kg)</th>
-                    <th>Peso (kg)</th>
-                    <th>Nascimento</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cow in relatorioAbate %}
-                    <tr>
-                        <td>{{ cow.codigo }}</td>
-                        <td>{{ cow.qtLeite }}</td>
-                        <td>{{ cow.qtRacao }}</td>
-                        <td>{{ cow.peso }}</td>
-                        <td>{{ cow.nascimento|date('Y-m-d') }}</td>
-                        <td>
-                            <form method="post" action="{{ path('app_enviar_abate', {'codigo': cow.codigo}) }}">
-                                <button type="submit">Enviar para Abate</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        {# Renderizar a paginação usando o KnpPaginatorBundle #}
-        <div class="pagination">
-            {{ knp_pagination_render(relatorioAbate) }}
+<div class="container">
+    <div class="row">
+        <!-- Menu lateral -->
+        <div class="col-md-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_relatorio_abatidos') }}">Relatório de Animais Abatidos</a>
+                </li>
+            </ul>
         </div>
-    {% else %}
-        <p>Não há animais elegíveis para abate no momento.</p>
-    {% endif %}
+    
+        <!-- Conteúdo principal -->
+        <div class="col-md-9">
+            <h1>Lista de Animais para Abate</h1>
+
+            {% if relatorioAbate is not empty %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Leite (litros)</th>
+                            <th>Ração (kg)</th>
+                            <th>Peso (kg)</th>
+                            <th>Nascimento</th>
+                            <th>Fazenda</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cow in relatorioAbate %}
+                            <tr>
+                                <td>{{ cow.codigo }}</td>
+                                <td>{{ cow.qtLeite }}</td>
+                                <td>{{ cow.qtRacao }}</td>
+                                <td>{{ cow.peso }}</td>
+                                <td>{{ cow.nascimento|date('Y-m-d') }}</td>
+                                <td>{{ cow.fazenda }}</td>
+                                <td>
+                                    <form method="post" action="{{ path('app_enviar_abate', {'codigo': cow.codigo}) }}">
+                                        <button type="submit">Enviar para Abate</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {# Renderizar a paginação usando o KnpPaginatorBundle #}
+                <div class="pagination">
+                    {{ knp_pagination_render(relatorioAbate) }}
+                </div>
+            {% else %}
+                <p>Não há animais elegíveis para abate no momento.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+    
 {% endblock %}

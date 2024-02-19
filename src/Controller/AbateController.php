@@ -46,12 +46,29 @@ class AbateController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', 'Animal enviado para abate com sucesso.');
             } else {
-                $this->addFlash('error', 'Animal não encontrado.');
+                $this->addFlash('error', 'Animal com código ' . $codigo . ' não encontrado.');
             }
-
-            return $this->redirectToRoute('app_relatorio_abate');
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Erro ao enviar o animal para abate: ');
+            $this->addFlash('error', 'Erro ao enviar o animal para abate');
         }
+
+        return $this->redirectToRoute('app_relatorio_abate');
+    }
+
+    /**
+     * @Route("/relatorio-abatidos", name="app_relatorio_abatidos")
+     */
+    public function relatorioAbatidos(PaginatorInterface $paginator, Request $request): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $queryBuilder = $entityManager->getRepository(Cow::class)->findBy(['status' => false]);
+
+        $relatorioAbatidos = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('abate/abatidos.html.twig', ['relatorioAbatidos' => $relatorioAbatidos]);
     }
 }

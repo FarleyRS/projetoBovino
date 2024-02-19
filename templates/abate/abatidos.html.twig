@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Relatório de Animais Abatidos{% endblock %}
+{% block stylesheets %}
+        <link href="{{ asset('css/estilo.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <!-- Menu lateral -->
+        <div class="col-md-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_relatorio_abate') }}">Relatório de Animais Para Abate</a>
+                </li>
+            </ul>
+        </div>
+    
+        <!-- Conteúdo principal -->
+        <div class="col-md-9">
+        <h1>Relatório de Animais Abatidos</h1>
+
+        {% if relatorioAbatidos is not empty %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Leite (litros)</th>
+                        <th>Ração (kg)</th>
+                        <th>Peso (kg)</th>
+                        <th>Fazenda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cow in relatorioAbatidos %}
+                        <tr>
+                            <td>{{ cow.codigo }}</td>
+                            <td>{{ cow.qtLeite }}</td>
+                            <td>{{ cow.qtRacao }}</td>
+                            <td>{{ cow.peso }}</td>
+                            <td>{{ cow.fazenda }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {# Renderizar a paginação usando o KnpPaginatorBundle #}
+            <div class="pagination">
+                {{ knp_pagination_render(relatorioAbatidos) }}
+            </div>
+        {% else %}
+            <p>Não há animais abatidos no momento.</p>
+        {% endif %}
+          </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Cow index{% endblock %}
-
+{% block stylesheets %}
+        <link href="{{ asset('css/buttonStyle.css') }}" rel="stylesheet">
+{% endblock %}
 {% block body %}
     <h1>Cow index</h1>
 
@@ -31,8 +33,8 @@
                 <td>{{ cow.status ? 'Vivo' : 'Abatido' }}</td>
                 <td>{{ cow.fazenda}}</td>
                 <td>
-                    <a href="{{ path('app_cow_show', {'id': cow.id}) }}">show</a>
-                    <a href="{{ path('app_cow_edit', {'id': cow.id}) }}">edit</a>
+                    <a class="linkPaginas" href="{{ path('app_cow_show', {'id': cow.id}) }}">show</a>
+                    <a class="linkPaginas" href="{{ path('app_cow_edit', {'id': cow.id}) }}">edit</a>
                 </td>
             </tr>
        
@@ -50,5 +52,5 @@
     <div class="pagination">
         {{ knp_pagination_render(cows) }}
     </div>
-    <a href="{{ path('app_cow_new') }}">Create new</a>
+    <a class="linkPaginas" href="{{ path('app_cow_new') }}">Create new</a>
 {% endblock %}

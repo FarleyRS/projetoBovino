@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Cow;
-use App\Entity\Farm;
 use App\Form\CowType;
 use App\Repository\CowRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -41,26 +40,28 @@ class CowController extends AbstractController
      */
     public function new(Request $request, CowRepository $cowRepository): Response
     {
-        try {
-            $cow = new Cow();
-            $cow->setStatus(true);
-            $form = $this->createForm(CowType::class, $cow);
-            $form->handleRequest($request);
+        $cow = new Cow();
+        $cow->setStatus(true);
+        $form = $this->createForm(CowType::class, $cow);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
                 $cowRepository->add($cow, true);
                 $this->addFlash('success', 'Animal Adicionado com sucesso.');
                 return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erro ao adicionar novo animal');
+                return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
             }
-
-            return $this->renderForm('cow/new.html.twig', [
-                'cow' => $cow,
-                'form' => $form,
-            ]);
-        } catch (\Exception $e) {
-            $this->addFlash('error', 'Erro ao adicionar novo animal.');
         }
+
+        return $this->renderForm('cow/new.html.twig', [
+            'cow' => $cow,
+            'form' => $form,
+        ]);
     }
+
 
     /**
      * @Route("/{id}", name="app_cow_show", methods={"GET"})
@@ -77,39 +78,47 @@ class CowController extends AbstractController
      */
     public function edit(Request $request, Cow $cow, CowRepository $cowRepository): Response
     {
-        try {
-            $form = $this->createForm(CowType::class, $cow);
-            $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
+        $form = $this->createForm(CowType::class, $cow);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
                 $cowRepository->add($cow, true);
                 $this->addFlash('success', 'Animal editado com sucesso.');
                 return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Não foi possivel editar');
             }
-
-            return $this->renderForm('cow/edit.html.twig', [
-                'cow' => $cow,
-                'form' => $form,
-            ]);
-        } catch (\Exception $e) {
-            $this->addFlash('error', 'Não foi possivel editar');
         }
+
+        return $this->renderForm('cow/edit.html.twig', [
+            'cow' => $cow,
+            'form' => $form,
+        ]);
     }
 
     /**
      * @Route("/{id}", name="app_cow_delete", methods={"POST"})
      */
-    public function delete(Request $request, Cow $cow, CowRepository $cowRepository): Response
+    public function delete($id, Request $request, CowRepository $cowRepository): Response
     {
+        $cow = $cowRepository->find($id);
+
+        if (!$cow) {
+            $this->addFlash('error', 'Animal não encontrado.');
+            return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         try {
             if ($this->isCsrfTokenValid('delete' . $cow->getId(), $request->request->get('_token'))) {
                 $cowRepository->remove($cow, true);
                 $this->addFlash('success', 'Animal deletado com sucesso.');
-
-                return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
             }
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Não foi possivel deletar.');
+            $this->addFlash('error', 'Não foi possivel deletar o animal com Codigo: ' . $cow->getCodigo());
         }
+
+        return $this->redirectToRoute('app_cow_index');
     }
 }

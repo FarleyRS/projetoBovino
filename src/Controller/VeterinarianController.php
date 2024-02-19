@@ -40,25 +40,26 @@ class VeterinarianController extends AbstractController
      */
     public function new(Request $request, VeterinarianRepository $veterinarianRepository): Response
     {
-        try {
-            $veterinarian = new Veterinarian();
-            $form = $this->createForm(VeterinarianType::class, $veterinarian);
-            $form->handleRequest($request);
-    
-            if ($form->isSubmitted() && $form->isValid()) {
-                $veterinarianRepository->add($veterinarian, true);    
+        $veterinarian = new Veterinarian();
+        $form = $this->createForm(VeterinarianType::class, $veterinarian);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $veterinarianRepository->add($veterinarian, true);
                 $this->addFlash('success', 'Veterinario adicionado com sucesso.');
                 return $this->redirectToRoute('app_veterinarian_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erro ao criar veterinário: ' . $e->getMessage());
             }
-    
-            return $this->renderForm('veterinarian/new.html.twig', [
-                'veterinarian' => $veterinarian,
-                'form' => $form,
-            ]);
-        } catch (\Exception $e) {
-            $this->addFlash('error', 'Erro ao criar veterinário: ');    
         }
+
+        return $this->renderForm('veterinarian/new.html.twig', [
+            'veterinarian' => $veterinarian,
+            'form' => $form,
+        ]);
     }
+
 
     /**
      * @Route("/{id}", name="app_veterinarian_show", methods={"GET"})
@@ -75,39 +76,48 @@ class VeterinarianController extends AbstractController
      */
     public function edit(Request $request, Veterinarian $veterinarian, VeterinarianRepository $veterinarianRepository): Response
     {
-        try {
-            $form = $this->createForm(VeterinarianType::class, $veterinarian);
-            $form->handleRequest($request);
-    
-            if ($form->isSubmitted() && $form->isValid()) {
+        $form = $this->createForm(VeterinarianType::class, $veterinarian);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
                 $veterinarianRepository->add($veterinarian, true);
                 $this->addFlash('success', 'Veterinario editado com sucesso.');
                 return $this->redirectToRoute('app_veterinarian_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erro ao editar veterinário: ' . $e->getMessage());
             }
-    
-            return $this->renderForm('veterinarian/edit.html.twig', [
-                'veterinarian' => $veterinarian,
-                'form' => $form,
-            ]);
-        } catch (\Exception $e) {
-            $this->addFlash('error', 'Erro ao editar veterinário: ');
         }
+
+        return $this->renderForm('veterinarian/edit.html.twig', [
+            'veterinarian' => $veterinarian,
+            'form' => $form,
+        ]);
     }
 
     /**
      * @Route("/{id}", name="app_veterinarian_delete", methods={"POST"})
      */
-    public function delete(Request $request, Veterinarian $veterinarian, VeterinarianRepository $veterinarianRepository): Response
+    public function delete($id, Request $request, VeterinarianRepository $veterinarianRepository): Response
     {
+        $veterinarian = $veterinarianRepository->find($id);
+
+        if (!$veterinarian) {
+            $this->addFlash('error', 'Veterinario não encontrado.');
+            return $this->redirectToRoute('app_veterinarian_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         try {
             if ($this->isCsrfTokenValid('delete' . $veterinarian->getId(), $request->request->get('_token'))) {
                 $veterinarianRepository->remove($veterinarian, true);
                 $this->addFlash('success', 'Veterinario deletado com sucesso.');
+            } else {
+                throw new \Exception('Token inválido.');
             }
-    
-            return $this->redirectToRoute('app_veterinarian_index', [], Response::HTTP_SEE_OTHER);
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Erro ao excluir veterinário: ');
+            $this->addFlash('error', 'Erro: ' . $e->getMessage());
         }
+
+        return $this->redirectToRoute('app_veterinarian_index', [], Response::HTTP_SEE_OTHER);
     }
 }
