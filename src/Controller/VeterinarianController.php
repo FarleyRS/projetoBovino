@@ -112,10 +112,10 @@ class VeterinarianController extends AbstractController
                 $veterinarianRepository->remove($veterinarian, true);
                 $this->addFlash('success', 'Veterinario deletado com sucesso.');
             } else {
-                throw new \Exception('Token inválido.');
+                throw new \Exception('Erro ao deletar.');
             }
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Erro: ' . $e->getMessage());
+            $this->addFlash('error', 'Erro ao deletar. ' . $e->getMessage());
         }
 
         return $this->redirectToRoute('app_veterinarian_index', [], Response::HTTP_SEE_OTHER);

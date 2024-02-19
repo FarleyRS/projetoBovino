@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Cow;
+use App\Exception\FarmCapacityExceededException;
 use App\Form\CowType;
 use App\Repository\CowRepository;
+use App\Service\ServiceCow;
+use App\Service\ServiceFarm;
+use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +42,7 @@ class CowController extends AbstractController
     /**
      * @Route("/new", name="app_cow_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, CowRepository $cowRepository): Response
+    public function new(Request $request, CowRepository $cowRepository, ServiceCow $validaCow, ServiceFarm $validaFarm): Response
     {
         $cow = new Cow();
         $cow->setStatus(true);
@@ -47,12 +51,25 @@ class CowController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                // Valida o código do animal antes de adicioná-lo ao banco de dados.
+                $validaCow->validaCodigo($cow->getCodigo());
+                // Valida a capacidade da fazenda 
+                $validaFarm->validaCapacidade($cow->getFazenda());
+
                 $cowRepository->add($cow, true);
                 $this->addFlash('success', 'Animal Adicionado com sucesso.');
                 return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
-            } catch (\Exception $e) {
+
+            } catch (\InvalidArgumentException $e) {
+                $this->addFlash(
+                    'error',
+                    'Já existe um animal vivo com o mesmo código.'
+                );
+            }catch(FarmCapacityExceededException $e){
+                $this->addFlash('error', $e->getMessage());
+            } 
+            catch (\Exception $e) {
                 $this->addFlash('error', 'Erro ao adicionar novo animal');
-                return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
             }
         }
 
@@ -78,7 +95,6 @@ class CowController extends AbstractController
      */
     public function edit(Request $request, Cow $cow, CowRepository $cowRepository): Response
     {
-
         $form = $this->createForm(CowType::class, $cow);
         $form->handleRequest($request);
 
