@@ -6,6 +6,7 @@ use App\Entity\Farm;
 use App\Entity\Veterinarian;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,7 +16,9 @@ class FarmType extends AbstractType
     {
         $builder
             ->add('nome')
-            ->add('tamanho')
+            ->add('tamanho', NumberType::class, [
+                'scale' => 2,
+            ])
             ->add('responsavel')
             ->add(
                 'veterinarios',

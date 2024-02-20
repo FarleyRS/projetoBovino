@@ -29,6 +29,7 @@
                         <th>Leite (litros)</th>
                         <th>Ração (kg)</th>
                         <th>Peso (kg)</th>
+                        <th>Nascimento</th>
                         <th>Fazenda</th>
                     </tr>
                 </thead>
@@ -39,6 +40,7 @@
                             <td>{{ cow.qtLeite }}</td>
                             <td>{{ cow.qtRacao }}</td>
                             <td>{{ cow.peso }}</td>
+                            <td>{{ cow.nascimento|date('Y-m-d') }}</td>
                             <td>{{ cow.fazenda }}</td>
                         </tr>
                     {% endfor %}

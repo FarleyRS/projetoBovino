@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Cow;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,9 +14,15 @@ class CowType extends AbstractType
     {
         $builder
             ->add('codigo')
-            ->add('qt_leite')
-            ->add('qt_racao')
-            ->add('peso')
+            ->add('qt_leite', NumberType::class, [
+                'scale' => 2,
+            ])
+            ->add('qt_racao', NumberType::class, [
+                'scale' => 2,
+            ])
+            ->add('peso', NumberType::class, [
+                'scale' => 2,
+            ])
             ->add('nascimento')
             ->add('fazenda')
         ;
