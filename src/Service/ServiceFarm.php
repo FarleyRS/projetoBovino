@@ -25,7 +25,7 @@ class ServiceFarm
             throw new \InvalidArgumentException('Fazenda não encontrada.');
         }
         $numberOfCows = $this->cowRepository->count(['fazenda' => $farm, 'status' => true]); // Numero de bovinos atual na fazenda
-        $maxCows = $farm->getTamanho() * 1; // Bovinos por hectares
+        $maxCows = $farm->getTamanho() * 18; // Bovinos por hectares
         if ($numberOfCows >= $maxCows) {
             throw new FarmCapacityExceededException();
         }

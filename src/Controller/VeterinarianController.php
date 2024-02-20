@@ -6,6 +6,7 @@ use App\Entity\Veterinarian;
 use App\Form\VeterinarianType;
 use App\Repository\VeterinarianRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,13 +39,19 @@ class VeterinarianController extends AbstractController
     /**
      * @Route("/new", name="app_veterinarian_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, VeterinarianRepository $veterinarianRepository): Response
+    public function new(Request $request, VeterinarianRepository $veterinarianRepository, LoggerInterface $logger): Response
     {
         $veterinarian = new Veterinarian();
         $form = $this->createForm(VeterinarianType::class, $veterinarian);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $farms = $form->get('farms')->getData();
+            foreach ($farms as $farm) {
+                $veterinarian->addFarm($farm);
+            }
+
             try {
                 $veterinarianRepository->add($veterinarian, true);
                 $this->addFlash('success', 'Veterinario adicionado com sucesso.');

@@ -38,28 +38,4 @@ class FarmRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-    //    /**
-    //     * @return Farm[] Returns an array of Farm objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('f')
-    //            ->andWhere('f.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('f.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    public function findOneByNome($nome): ?Farm
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.tamanho = :tamanho')
-            ->setParameter('tamanho', $nome)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
 }

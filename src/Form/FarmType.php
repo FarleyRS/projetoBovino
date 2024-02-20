@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Farm;
+use App\Entity\Veterinarian;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,8 +17,16 @@ class FarmType extends AbstractType
             ->add('nome')
             ->add('tamanho')
             ->add('responsavel')
-            ->add('veterinarios')
-        ;
+            ->add(
+                'veterinarios',
+                EntityType::class,
+                [
+                    'class' => Veterinarian::class,
+                    'multiple' => true,
+                    'expanded' => true
+                ]
+
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

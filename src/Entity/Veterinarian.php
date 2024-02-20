@@ -32,13 +32,17 @@ class Veterinarian
     private $CRMV;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Farm::class, mappedBy="veterinarios")
+     * @ORM\ManyToMany(targetEntity=Farm::class)
+     * @ORM\JoinTable(name="farm_veterinarian",
+     *      joinColumns={@ORM\JoinColumn(name="veterinarian_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="farm_id", referencedColumnName="id")}
+     *      )
      */
     private $farms;
 
-    public function __construct()
+    public function __construct() 
     {
-        $this->farms = new ArrayCollection();
+        $this->farms = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getId(): ?int
@@ -78,22 +82,15 @@ class Veterinarian
         return $this->farms;
     }
 
-    public function addFarm(Farm $farm): self
-    {
-        if (!$this->farms->contains($farm)) {
-            $farm->addVeterinario($this);
-            $this->farms[] = $farm;
-        }
+    public function addFarm(Farm $farm) {
+        $this->farms[] = $farm;
 
         return $this;
     }
 
     public function removeFarm(Farm $farm): self
     {
-        if ($this->farms->removeElement($farm)) {
-            $farm->removeVeterinario($this);
-        }
-
+       $this->farms->removeElement($farm);
         return $this;
     }
 
