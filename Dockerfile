@@ -4,6 +4,7 @@ FROM composer as builder
 WORKDIR /usr/farleyrs/projeto_bovino
 COPY composer.* ./
 RUN composer update --no-interaction
+RUN composer require symfony/runtime --no-interaction
 
 FROM php:8.1.0-fpm
 
