@@ -1,4 +1,3 @@
-# Dockerfile
 FROM composer as builder
 
 WORKDIR /usr/farleyrs/projeto_bovino
@@ -13,7 +12,7 @@ RUN docker-php-ext-install pdo pdo_mysql zip
 
 RUN curl "https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh" -o setup.deb.sh && \
   chmod +x ./setup.deb.sh && ./setup.deb.sh && apt install symfony-cli -y && rm -f ./setup.deb.sh
-  
+
 WORKDIR /usr/farleyrs/projeto_bovino
 
 COPY . .
@@ -25,3 +24,4 @@ RUN curl -s -o /usr/bin/wait-for "https://raw.githubusercontent.com/eficode/wait
   chmod +x /usr/bin/wait-for
 
 EXPOSE 8000
+
