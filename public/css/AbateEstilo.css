@@ -8,21 +8,22 @@
 .col-md-3 {
     background-color: #f8f9fa;
     height: 100vh;
-    padding: 20px;
+    padding: 10px;
     text-align: center;
 }
 
-.nav-item {
+.menu-item {
     padding: 10px 0;
+    background-color: #007bff;
 }
 
-.nav-link {
+.menu-link {
     color: #030303;
     text-decoration: none;
 }
 
-.nav-link:hover {
-    color: #15c51e;
+.menu-link:hover {
+    color: #ffffff;
 }
 
 /* Estilo para o conteúdo principal */
@@ -68,4 +69,8 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+a {
+    text-decoration: none;
 }

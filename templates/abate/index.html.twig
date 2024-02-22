@@ -2,7 +2,7 @@
 
 {% block title %}Lista de Animais para Abate{% endblock %}
 {% block stylesheets %}
-        <link href="{{ asset('css/estilo.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/AbateEstilo.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -11,8 +11,8 @@
         <!-- Menu lateral -->
         <div class="col-md-3">
             <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_relatorio_abatidos') }}">Relatório de Animais Abatidos</a>
+                <li class="menu-item">
+                    <a class="menu-link" href="{{ path('app_relatorio_abatidos') }}">Relatório de Animais Abatidos</a>
                 </li>
             </ul>
         </div>

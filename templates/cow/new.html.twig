@@ -1,11 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Cow{% endblock %}
+{% block title %}Adicionar Bovino{% endblock %}
 
 {% block body %}
-    <h1>Create new Cow</h1>
-    
-    {{ include('cow/_form.html.twig') }}
-
-    <a href="{{ path('app_cow_index') }}">back to list</a>
+    <div class="container">
+        <h1>Adicionar Novo Bovino</h1>
+        {{ include('cow/_form.html.twig') }}
+   </div>
 {% endblock %}

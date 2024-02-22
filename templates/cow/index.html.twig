@@ -1,24 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Cow index{% endblock %}
-{% block stylesheets %}
-        <link href="{{ asset('css/buttonStyle.css') }}" rel="stylesheet">
-{% endblock %}
-{% block body %}
-    <h1>Cow index</h1>
+{% block title %}Dashboard Bovino{% endblock %}
+
+{% block body %}       
+    <h1>Lista de Bovinos</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Codigo</th>
-                <th>Qt_leite</th>
-                <th>Qt_racao</th>
-                <th>Peso</th>
+                <th>Quantidade de leite (litros)</th>
+                <th>Quantidade de ração (Kg)</th>
+                <th>Peso (Kg)</th>
                 <th>Nascimento</th>
                 <th>Status</th>
                 <th>Fazenda</th>
-                <th>actions</th>
+                <th>Opções</th>
             </tr>
         </thead>
         <tbody>
@@ -33,24 +31,21 @@
                 <td>{{ cow.status ? 'Vivo' : 'Abatido' }}</td>
                 <td>{{ cow.fazenda}}</td>
                 <td>
-                    <a class="linkPaginas" href="{{ path('app_cow_show', {'id': cow.id}) }}">show</a>
-                    <a class="linkPaginas" href="{{ path('app_cow_edit', {'id': cow.id}) }}">edit</a>
+                    <a class="btn" href="{{ path('app_cow_show', {'id': cow.id}) }}">Visualizar</a>
+                    <a class="btn" href="{{ path('app_cow_edit', {'id': cow.id}) }}">Editar</a>
                 </td>
             </tr>
-       
+    
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="7">Nenhum registro encontrado.</td>
             </tr>
-        {% endfor %}
-        
-        
+        {% endfor %}          
         </tbody>
-        
     </table>
     {# Renderizar a paginação usando o KnpPaginatorBundle #}
     <div class="pagination">
         {{ knp_pagination_render(cows) }}
     </div>
-    <a class="linkPaginas" href="{{ path('app_cow_new') }}">Create new</a>
+    <a class="btn" href="{{ path('app_cow_new') }}">Adicionar Novo Bovino</a>
 {% endblock %}
