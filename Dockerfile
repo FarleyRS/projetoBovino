@@ -3,9 +3,8 @@ FROM composer as builder
 WORKDIR /usr/farleyrs/projeto_bovino
 COPY composer.* ./
 RUN composer update --no-interaction
-RUN composer require symfony/runtime --no-interaction
 
-FROM php:8.1.0-fpm
+FROM php:8.1.0
 
 RUN apt update && apt upgrade -y
 RUN apt install zip unzip zlib1g-dev libzip-dev netcat -y
