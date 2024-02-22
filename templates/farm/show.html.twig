@@ -1,34 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Farm{% endblock %}
+{% block title %}Visualizar Fazenda{% endblock %}
 
 {% block body %}
-    <h1>Farm</h1>
+    <div class="container">
+        <h1>Fazenda</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ farm.id }}</td>
-            </tr>
-            <tr>
-                <th>Nome</th>
-                <td>{{ farm.nome }}</td>
-            </tr>
-            <tr>
-                <th>Tamanho</th>
-                <td>{{ farm.tamanho }} ha</td>
-            </tr>
-            <tr>
-                <th>Responsavel</th>
-                <td>{{ farm.responsavel }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_farm_index') }}">back to list</a>
-
-    <a href="{{ path('app_farm_edit', {'id': farm.id}) }}">edit</a>
-
-    {{ include('farm/_delete_form.html.twig') }}
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ farm.id }}</td>
+                </tr>
+                <tr>
+                    <th>Nome</th>
+                    <td>{{ farm.nome }}</td>
+                </tr>
+                <tr>
+                    <th>Tamanho</th>
+                    <td>{{ farm.tamanho }} ha</td>
+                </tr>
+                <tr>
+                    <th>Responsavel</th>
+                    <td>{{ farm.responsavel }}</td>
+                </tr>
+                <tr>
+                    <th>Veterinarios</th>
+                    {% for veterinario in farm.veterinarios %} 
+                        <tr>
+                            <th></th>
+                            <td>{{ veterinario.nome }}</td>
+                        <tr>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+        {{ include('farm/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

@@ -5,8 +5,6 @@ namespace App\Entity;
 use App\Repository\CowRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\LessThanOrEqual;
-
 
 /**
  * @ORM\Entity(repositoryClass=CowRepository::class)

@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Lista de Animais para Abate{% endblock %}
+{% block title %}Relatório de Animais Abatidos{% endblock %}
+
 {% block stylesheets %}
         <link href="{{ asset('css/AbateEstilo.css') }}" rel="stylesheet">
 {% endblock %}
@@ -12,16 +13,16 @@
         <div class="col-md-3">
             <ul class="nav flex-column">
                 <li class="menu-item">
-                    <a class="menu-link" href="{{ path('app_relatorio_abatidos') }}">Relatório de Animais Abatidos</a>
+                    <a class="menu-link" href="{{ path('app_relatorio_abate') }}">Relatório de Animais Para Abate</a>
                 </li>
             </ul>
         </div>
     
         <!-- Conteúdo principal -->
         <div class="col-md-9">
-            <h1>Lista de Animais para Abate</h1>
+            <h1>Relatório de Animais Abatidos</h1>
 
-            {% if relatorioAbate is not empty %}
+            {% if relatorioAbatidos is not empty %}
                 <table>
                     <thead>
                         <tr>
@@ -31,11 +32,10 @@
                             <th>Peso (kg)</th>
                             <th>Nascimento</th>
                             <th>Fazenda</th>
-                            <th>Ação</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for cow in relatorioAbate %}
+                        {% for cow in relatorioAbatidos %}
                             <tr>
                                 <td>{{ cow.codigo }}</td>
                                 <td>{{ cow.qtLeite }}</td>
@@ -43,11 +43,6 @@
                                 <td>{{ cow.peso }}</td>
                                 <td>{{ cow.nascimento|date('Y-m-d') }}</td>
                                 <td>{{ cow.fazenda }}</td>
-                                <td>
-                                    <form method="post" action="{{ path('app_enviar_abate', {'codigo': cow.codigo}) }}">
-                                        <button type="submit">Enviar para Abate</button>
-                                    </form>
-                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -55,13 +50,12 @@
 
                 {# Renderizar a paginação usando o KnpPaginatorBundle #}
                 <div class="pagination">
-                    {{ knp_pagination_render(relatorioAbate) }}
+                    {{ knp_pagination_render(relatorioAbatidos) }}
                 </div>
             {% else %}
-                <p>Não há animais elegíveis para abate no momento.</p>
+                <p>Não há animais abatidos no momento.</p>
             {% endif %}
         </div>
     </div>
 </div>
-    
 {% endblock %}

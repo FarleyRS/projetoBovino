@@ -22,7 +22,7 @@ class FarmController extends AbstractController
     public function index(FarmRepository $farmRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $farmQuery = $farmRepository->createQueryBuilder('f')
-        ->getQuery();
+            ->getQuery();
 
         $farm = $paginator->paginate(
             $farmQuery,
@@ -45,9 +45,14 @@ class FarmController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $farmRepository->add($farm, true);
-
-            return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+            try {
+                $farmRepository->add($farm, true);
+                $this->addFlash('success', 'Fazenda adicionada com Sucesso.');
+                return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erro ao criar fazenda');
+                return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->renderForm('farm/new.html.twig', [
@@ -55,6 +60,7 @@ class FarmController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     /**
      * @Route("/{id}", name="app_farm_show", methods={"GET"})
@@ -75,9 +81,14 @@ class FarmController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $farmRepository->add($farm, true);
-
-            return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+            try {
+                $farmRepository->add($farm, true);
+                $this->addFlash('success', 'Fazenda editada com Sucesso.');
+                return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erro ao editar fazenda');
+                return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->renderForm('farm/edit.html.twig', [
@@ -86,15 +97,36 @@ class FarmController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/{id}", name="app_farm_delete", methods={"POST"})
      */
-    public function delete(Request $request, Farm $farm, FarmRepository $farmRepository): Response
+    public function delete($id, Request $request, FarmRepository $farmRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$farm->getId(), $request->request->get('_token'))) {
-            $farmRepository->remove($farm, true);
+        $farm = $farmRepository->find($id);
+
+        if (!$farm) {
+            $this->addFlash('error', 'Fazenda com ID ' . $id . ' não encontrada.');
+            return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->redirectToRoute('app_farm_index', [], Response::HTTP_SEE_OTHER);
+        try {
+            if ($this->isCsrfTokenValid('delete' . $farm->getId(), $request->request->get('_token'))) {
+                $farmRepository->remove($farm, true);
+                $this->addFlash('success', 'Fazenda deletada com Sucesso.');
+            }
+        } catch (\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException $e) {
+            $errorMessage = $e->getMessage();
+
+            if (strpos($errorMessage, 'cow') !== false) {
+                $this->addFlash('error', 'Não é possível excluir a fazenda ' . $farm->getNome() . '. Altere a fazenda associada a algum bovino antes de excluir a fazenda.');
+            } else {
+                $this->addFlash('error', 'Não é possível excluir a fazenda com ID ' . $id . ' devido estar associada a um veterinario ou bovino.');
+            }
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Ocorreu um erro ao excluir a fazenda com ID ' . $id . ': ' . $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_farm_index');
     }
 }

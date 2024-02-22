@@ -13,7 +13,9 @@ services:
     networks:
       - farleyrs
     command: --innodb-use-native-aio=0
-    
+    volumes:
+      - db_data:/var/lib/mysql
+
   symfony_app:
     container_name: symfony_app
     entrypoint: bash -c "wait-for mysql_db:3306 -t 50 -- php bin/console doctrine:migrations:migrate --no-interaction --quiet && symfony serve:start"
@@ -30,7 +32,13 @@ services:
       - mysql_db
     links:
       - mysql_db
+    volumes:
+      - .:/usr/farleyrs/projeto_bovino
 
 networks:
   farleyrs: 
     driver: bridge
+
+volumes:
+  db_data:
+

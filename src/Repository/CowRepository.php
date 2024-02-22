@@ -77,7 +77,10 @@ class CowRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('g')
             ->andWhere('g.status = :status')
-            ->andWhere('DATE_DIFF(CURRENT_DATE(), g.nascimento) / 365 > :idadeLimite OR g.qt_leite < :litrosLeiteLimite OR (g.qt_leite < :litrosLeiteLimiteAlt AND g.qt_racao / 7 > :quantidadeRacaoLimite) OR g.peso / 15 > :pesoLimite')
+            ->andWhere('DATE_DIFF(CURRENT_DATE(), g.nascimento) / 365 > :idadeLimite')
+            ->orWhere('g.qt_leite < :litrosLeiteLimite')
+            ->orWhere('g.qt_leite < :litrosLeiteLimiteAlt AND g.qt_racao / 7 > :quantidadeRacaoLimite')
+            ->orWhere('g.peso / 15 > :pesoLimite')
             ->setParameter('status', true)
             ->setParameter('idadeLimite', 5)
             ->setParameter('litrosLeiteLimite', 40)
@@ -85,4 +88,5 @@ class CowRepository extends ServiceEntityRepository
             ->setParameter('quantidadeRacaoLimite', 50)
             ->setParameter('pesoLimite', 18);
     }
+    
 }

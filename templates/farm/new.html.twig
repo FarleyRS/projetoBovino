@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Farm{% endblock %}
+{% block title %}Adicionar Fazenda{% endblock %}
 
 {% block body %}
-    <h1>Create new Farm</h1>
+    <div class="container">
+        <h1>Adicionar nova Fazenda</h1>
 
-    {{ include('farm/_form.html.twig') }}
-
-    <a href="{{ path('app_farm_index') }}">back to list</a>
+        {{ include('farm/_form.html.twig') }}
+    </div>
 {% endblock %}

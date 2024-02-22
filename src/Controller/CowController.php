@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Cow;
-use App\Entity\Farm;
+use App\Exception\FarmCapacityExceededException;
 use App\Form\CowType;
 use App\Repository\CowRepository;
+use App\Service\ServiceCow;
+use App\Service\ServiceFarm;
+use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,19 +42,35 @@ class CowController extends AbstractController
     /**
      * @Route("/new", name="app_cow_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, CowRepository $cowRepository): Response
+    public function new(Request $request, CowRepository $cowRepository, ServiceCow $validaCow, ServiceFarm $validaFarm): Response
     {
-
-
         $cow = new Cow();
         $cow->setStatus(true);
         $form = $this->createForm(CowType::class, $cow);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $cowRepository->add($cow, true);
-            $this->addFlash('success', 'Animal Adicionado com sucesso.');
-            return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+            try {
+                // Valida o código do animal antes de adicioná-lo ao banco de dados.
+                $validaCow->validaCodigo($cow->getCodigo());
+                // Valida a capacidade da fazenda 
+                $validaFarm->validaCapacidade($cow->getFazenda());
+
+                $cowRepository->add($cow, true);
+                $this->addFlash('success', 'Animal Adicionado com sucesso.');
+                return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+
+            } catch (\InvalidArgumentException $e) {
+                $this->addFlash(
+                    'error',
+                    'Já existe um animal vivo com o mesmo código.'
+                );
+            }catch(FarmCapacityExceededException $e){
+                $this->addFlash('error', $e->getMessage());
+            } 
+            catch (\Exception $e) {
+                $this->addFlash('error', 'Erro ao adicionar novo animal');
+            }
         }
 
         return $this->renderForm('cow/new.html.twig', [
@@ -59,6 +78,7 @@ class CowController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     /**
      * @Route("/{id}", name="app_cow_show", methods={"GET"})
@@ -79,11 +99,13 @@ class CowController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $cowRepository->add($cow, true);
-            $this->addFlash('success', 'Animal editado com sucesso.');
-            return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
-        }else{
-            $this->addFlash('error', 'Não foi possivel editar');
+            try {
+                $cowRepository->add($cow, true);
+                $this->addFlash('success', 'Animal editado com sucesso.');
+                return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Não foi possivel editar');
+            }
         }
 
         return $this->renderForm('cow/edit.html.twig', [
@@ -95,15 +117,24 @@ class CowController extends AbstractController
     /**
      * @Route("/{id}", name="app_cow_delete", methods={"POST"})
      */
-    public function delete(Request $request, Cow $cow, CowRepository $cowRepository): Response
+    public function delete($id, Request $request, CowRepository $cowRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $cow->getId(), $request->request->get('_token'))) {
-            $cowRepository->remove($cow, true);
-            $this->addFlash('success', 'Animal deletado com sucesso.');
-        }else{
-            $this->addFlash('error', 'Não foi possivel deletar.');
+        $cow = $cowRepository->find($id);
+
+        if (!$cow) {
+            $this->addFlash('error', 'Animal não encontrado.');
+            return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->redirectToRoute('app_cow_index', [], Response::HTTP_SEE_OTHER);
+        try {
+            if ($this->isCsrfTokenValid('delete' . $cow->getId(), $request->request->get('_token'))) {
+                $cowRepository->remove($cow, true);
+                $this->addFlash('success', 'Animal deletado com sucesso.');
+            }
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Não foi possivel deletar o animal com Codigo: ' . $cow->getCodigo());
+        }
+
+        return $this->redirectToRoute('app_cow_index');
     }
 }
