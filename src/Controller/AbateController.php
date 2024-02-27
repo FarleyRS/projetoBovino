@@ -39,7 +39,7 @@ class AbateController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
 
             // Lógica para enviar o animal para o abate
-            $animal = $entityManager->getRepository(Cow::class)->findOneBy(['codigo' => $codigo]);
+            $animal = $entityManager->getRepository(Cow::class)->findOneBy(['codigo' => $codigo,'status' => true]);
 
             if ($animal) {
                 $animal->setStatus(false);
