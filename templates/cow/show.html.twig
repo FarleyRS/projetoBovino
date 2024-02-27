@@ -18,15 +18,15 @@
                 </tr>
                 <tr>
                     <th>Quantidade de leite</th>
-                    <td>{{ cow.qtLeite }}</td>
+                    <td>{{ cow.qtLeite|number_format(2, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <th>Quantidade de ração</th>
-                    <td>{{ cow.qtRacao }}</td>
+                    <td>{{ cow.qtRacao|number_format(2, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <th>Peso</th>
-                    <td>{{ cow.peso }}</td>
+                    <td>{{ cow.peso|number_format(2, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <th>Status</th>
@@ -38,7 +38,7 @@
                 </tr>
                 <tr>
                     <th>Nascimento</th>
-                    <td>{{ cow.nascimento ? cow.nascimento|date('Y-m-d') : '' }}</td>
+                    <td>{{ cow.nascimento ? cow.nascimento|date('d-m-Y') : '' }}</td>
                 </tr>
             </tbody>
         </table>

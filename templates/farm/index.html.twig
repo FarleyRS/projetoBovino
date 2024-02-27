@@ -20,7 +20,7 @@
             <tr>
                 <td>{{ farm.id }}</td>
                 <td>{{ farm.nome }}</td>
-                <td>{{ farm.tamanho }} ha</td>
+                <td>{{ farm.tamanho|number_format(2, ',', '.') }} ha</td>
                 <td>{{ farm.responsavel }}</td>
                 <td>
                     <a class = "btn" href="{{ path('app_farm_show', {'id': farm.id}) }}">Visualizar</a>

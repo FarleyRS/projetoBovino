@@ -24,10 +24,10 @@
             <tr>
                 <td>{{ cow.id }}</td>
                 <td>{{ cow.codigo }}</td>
-                <td>{{ cow.qtLeite }}</td>
-                <td>{{ cow.qtRacao }}</td>
-                <td>{{ cow.peso }}</td>
-                <td>{{ cow.nascimento ? cow.nascimento|date('Y-m-d') : '' }}</td>
+                <td>{{ cow.qtLeite|number_format(2, ',', '.') }}</td>
+                <td>{{ cow.qtRacao|number_format(2, ',', '.') }}</td>
+                <td>{{ cow.peso|number_format(2, ',', '.') }}</td>
+                <td>{{ cow.nascimento ? cow.nascimento|date('d-m-Y') : '' }}</td>
                 <td>{{ cow.status ? 'Vivo' : 'Abatido' }}</td>
                 <td>{{ cow.fazenda}}</td>
                 <td>
