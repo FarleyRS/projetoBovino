@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>Lista de Veterinários</h1>
-
+    <a class="btn" href="{{ path('app_veterinarian_new') }}">Adicionar Novo</a>
     <table class="table">
         <thead>
             <tr>
@@ -37,5 +37,5 @@
         {{ knp_pagination_render(veterinarians) }}
     </div>
 
-    <a class="btn" href="{{ path('app_veterinarian_new') }}">Adicionar Novo</a>
+ 
 {% endblock %}

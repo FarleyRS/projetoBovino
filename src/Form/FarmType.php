@@ -32,8 +32,11 @@ class FarmType extends AbstractType
                 [
                     'class' => Veterinarian::class,
                     'multiple' => true,
-                    'expanded' => true, 
-                    'label' => 'Veterinarios'
+                    'label' => 'Veterinarios',
+                    'attr' => [
+                        'class' => 'select-vet',
+                        'label' => 'Veterinarios',
+                    ]
                 ]
 
             );
