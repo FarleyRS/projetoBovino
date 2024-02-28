@@ -10,8 +10,8 @@
         <!-- Menu lateral -->
         <div class="col-md-3">
             <ul class="nav flex-column">
-                <li class="menu-item">
-                    <a class="btn" role="button" href="{{ path('app_relatorio_abatidos') }}">Relatório de Animais Abatidos</a>
+                <li class="nav-item">
+                  <a class="nav-link active" href="{{ path('app_relatorio_abatidos') }}">Relatório de Animais Abatidos</a>
                 </li>
             </ul>
         </div>
@@ -44,7 +44,7 @@
                                 <td>{{ cow.fazenda }}</td>
                                 <td>
                                     <form method="post" action="{{ path('app_enviar_abate', {'codigo': cow.codigo}) }}">
-                                        <button class="bnt" type="submit">Enviar para Abate</button>
+                                        <button class="btn btn-danger" type="submit">Enviar para Abate</button>
                                     </form>
                                 </td>
                             </tr>

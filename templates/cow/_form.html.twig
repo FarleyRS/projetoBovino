@@ -1,7 +1,7 @@
 {{ form_start(form) }}
     {{ form_widget(form) }} 
-    <button class="btn">{{ button_label|default('Salvar') }}</button> 
-    <a class="btn" href="{{ path('app_cow_index') }}">Voltar a lista</a>
+    <button class="btn btn-success">{{ button_label|default('Salvar') }}</button> 
+    <a class="btn btn-secondary" href="{{ path('app_cow_index') }}">Voltar a lista</a>
 {{ form_end(form) }}
 
 

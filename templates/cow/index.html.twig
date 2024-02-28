@@ -2,9 +2,16 @@
 
 {% block title %}Dashboard Bovino{% endblock %}
 
-{% block body %}       
+{% block stylesheet %}
+
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
     <h1>Lista de Bovinos</h1>
-    <a class="btn" href="{{ path('app_cow_new') }}">Adicionar Novo Bovino</a>
+    <a class="btn btn-primary" href="{{ path('app_cow_new') }}">Adicionar Novo Bovino</a>
+
+    <div class="table-responsive">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -31,8 +38,8 @@
                 <td>{{ cow.status ? 'Vivo' : 'Abatido' }}</td>
                 <td>{{ cow.fazenda}}</td>
                 <td>
-                    <a class="btn" href="{{ path('app_cow_show', {'id': cow.id}) }}">Visualizar</a>
-                    <a class="btn" href="{{ path('app_cow_edit', {'id': cow.id}) }}">Editar</a>
+                    <a class="btn btn-primary" href="{{ path('app_cow_show', {'id': cow.id}) }}">Visualizar</a>
+                    <a class="btn btn-secondary" href="{{ path('app_cow_edit', {'id': cow.id}) }}">Editar</a>
                 </td>
             </tr>
     
@@ -43,9 +50,12 @@
         {% endfor %}          
         </tbody>
     </table>
+    </div>
     {# Renderizar a paginação usando o KnpPaginatorBundle #}
     <div class="pagination">
         {{ knp_pagination_render(cows) }}
     </div>
+</div>       
+    
    
 {% endblock %}

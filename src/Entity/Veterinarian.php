@@ -32,7 +32,7 @@ class Veterinarian
     private $CRMV;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Farm::class)
+     * @ORM\ManyToMany(targetEntity=Farm::class, mappedBy="veterinarios")
      * @ORM\JoinTable(name="farm_veterinarian",
      *      joinColumns={@ORM\JoinColumn(name="veterinarian_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="farm_id", referencedColumnName="id")}

@@ -1,6 +1,6 @@
 <form method="post" action="{{ path('app_cow_delete', {'id': cow.id}) }}" onsubmit="return confirm('Realmente deseja deletar esse item?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cow.id) }}">
-    <button class="btn">Deletar</button>
-    <a class = "btn" href="{{ path('app_cow_edit', {'id': cow.id}) }}">Editar</a>
-    <a class = "btn" href="{{ path('app_cow_index') }}">Voltar a lista</a>
+    <button class="btn btn-danger">Deletar</button>
+    <a class = "btn btn-primary" role="button" href="{{ path('app_cow_edit', {'id': cow.id}) }}">Editar</a>
+    <a class = "btn btn-secondary" role="button" href="{{ path('app_cow_index') }}">Voltar a lista</a>
 </form>

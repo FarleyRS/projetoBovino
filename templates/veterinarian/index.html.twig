@@ -3,39 +3,42 @@
 {% block title %}Dashboard Veterinários{% endblock %}
 
 {% block body %}
-    <h1>Lista de Veterinários</h1>
-    <a class="btn" href="{{ path('app_veterinarian_new') }}">Adicionar Novo</a>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nome</th>
-                <th>CRMV</th>
-                <th>Opções</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for veterinarian in veterinarians %}
-            <tr>
-                <td>{{ veterinarian.id }}</td>
-                <td>{{ veterinarian.nome }}</td>
-                <td>{{ veterinarian.CRMV }}</td>
-                <td>
-                    <a class="btn" href="{{ path('app_veterinarian_show', {'id': veterinarian.id}) }}">Visualizar</a>
-                    <a class="btn" href="{{ path('app_veterinarian_edit', {'id': veterinarian.id}) }}">Editar</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">Nenhum registro encontrado.</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-     {# Renderizar a paginação usando o KnpPaginatorBundle #}
-    <div class="pagination">
-        {{ knp_pagination_render(veterinarians) }}
-    </div>
 
+    <div class="container-fluid">
+        <h1>Lista de Veterinários</h1>
+        <a class="btn btn-primary" href="{{ path('app_veterinarian_new') }}">Adicionar novo Veterinário</a>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>CRMV</th>
+                    <th>Opções</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for veterinarian in veterinarians %}
+                <tr>
+                    <td>{{ veterinarian.id }}</td>
+                    <td>{{ veterinarian.nome }}</td>
+                    <td>{{ veterinarian.CRMV }}</td>
+                    <td>
+                        <a class="btn btn-primary" href="{{ path('app_veterinarian_show', {'id': veterinarian.id}) }}">Visualizar</a>
+                        <a class="btn btn-secondary" href="{{ path('app_veterinarian_edit', {'id': veterinarian.id}) }}">Editar</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Nenhum registro encontrado.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# Renderizar a paginação usando o KnpPaginatorBundle #}
+        <div class="pagination">
+            {{ knp_pagination_render(veterinarians) }}
+        </div>
+
+    </div>
  
 {% endblock %}
