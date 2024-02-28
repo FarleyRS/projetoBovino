@@ -32,6 +32,4 @@ class ServiceFarm
 
         return true;
     }
-
-    
 }
